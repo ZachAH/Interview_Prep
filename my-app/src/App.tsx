@@ -1,14 +1,21 @@
 'use client';
 import { useState, useEffect } from 'react';
-import type { InterviewItem } from './questions.ts'; // type-only import
-import { interviewData } from './questions.ts';
+import { interviewData, type InterviewItem } from './questions.ts';
+
+const sections = [
+  'JavaScript Fundamentals', 'React Basics', 'Advanced React & State Management', 'CSS & Styling',
+  'Performance & Optimization', 'Testing', 'Security & Scenario Questions', 'Advanced/Scenario Questions',
+  'Claw and Decay Technical/Design Questions', 'CRUD (Create, Read, Update, Delete)', 'RPC (Remote Procedure Call)',
+  'Scenarios', 'WebSockets', 'Vite', 'WebSocket Questions', 'Vite Questions', 'Core Technical Skills',
+  'DevOps & Cloud', 'Databases', 'Agile & Collaboration', 'Problem-Solving & Behavioral'
+];
 
 export default function App() {
-  // revealedAnswers: keys are numbers, values are booleans
   const [revealedAnswers, setRevealedAnswers] = useState<Record<number, boolean>>({});
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [itemsToShow, setItemsToShow] = useState<number>(10);
+  const [activeSection, setActiveSection] = useState<string>(''); // selected section
   const itemsPerLoad = 10;
 
   useEffect(() => {
@@ -17,27 +24,27 @@ export default function App() {
     }
   }, []);
 
-  const filteredData: InterviewItem[] = interviewData.filter(item =>
-    item.question.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const toggleAnswer = (index: number) => {
+    setRevealedAnswers(prev => ({ ...prev, [index]: !prev[index] }));
+  };
+
+  const toggleDarkMode = () => setDarkMode(!darkMode);
 
   const handleShowMore = () => setItemsToShow(prev => prev + itemsPerLoad);
 
   const handleScrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // Type 'index' explicitly as number
-  const toggleAnswer = (index: number) => {
-    setRevealedAnswers(prev => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
-  };
-
-  const toggleDarkMode = () => setDarkMode(!darkMode);
+  // Filter by search term + section
+  const filteredData: InterviewItem[] = interviewData.filter(item =>
+    item.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.answer.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-gray-200' : 'bg-gray-100 text-gray-800'} p-4 sm:p-8 flex flex-col items-center transition-colors duration-300`}>
       <div className="w-full max-w-4xl space-y-4">
+
         {/* Header & Search */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
           <h1 className={`text-3xl sm:text-4xl font-extrabold text-center ${darkMode ? 'text-indigo-400' : 'text-indigo-700'}`}>
@@ -69,6 +76,24 @@ export default function App() {
               )}
             </button>
           </div>
+        </div>
+
+        {/* Section Buttons */}
+        <div className="flex flex-wrap gap-2 mb-6 justify-center">
+          {sections.map(section => (
+            <button
+              key={section}
+              onClick={() => setActiveSection(activeSection === section ? '' : section)}
+              className={`px-4 py-2 rounded-full font-semibold transition-all duration-300
+                         ${activeSection === section
+                           ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                           : darkMode
+                             ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                             : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
+            >
+              {section}
+            </button>
+          ))}
         </div>
 
         {/* Flashcards */}
