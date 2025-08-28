@@ -34,12 +34,19 @@ export default function App() {
 
   const handleScrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // Filter by search term + section
-  const filteredData: InterviewItem[] = interviewData.filter(item =>
-    item.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.answer.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  
+  const filteredData: InterviewItem[] = interviewData.filter(item => {
+    const matchesSearch =
+      item.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.answer.toLowerCase().includes(searchTerm.toLowerCase());
+
+    // If search term exists, ignore section filter
+    if (searchTerm !== '') return matchesSearch;
+
+    // Otherwise, filter by section (or show all if no section selected)
+    const matchesSection = activeSection === '' || item.section === activeSection;
+    return matchesSection;
+  });
+
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-gray-200' : 'bg-gray-100 text-gray-800'} p-4 sm:p-8 flex flex-col items-center transition-colors duration-300`}>
@@ -83,13 +90,17 @@ export default function App() {
           {sections.map(section => (
             <button
               key={section}
-              onClick={() => setActiveSection(activeSection === section ? '' : section)}
+              onClick={() => {
+                setActiveSection(activeSection === section ? '' : section);
+                setSearchTerm(''); // clear search when section is clicked
+                setItemsToShow(itemsPerLoad); // optional: reset items shown
+              }}
               className={`px-4 py-2 rounded-full font-semibold transition-all duration-300
-                         ${activeSection === section
-                           ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                           : darkMode
-                             ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
-                             : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
+             ${activeSection === section
+                  ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                  : darkMode
+                    ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
             >
               {section}
             </button>
