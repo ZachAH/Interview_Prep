@@ -4,18 +4,10 @@
 @import "tailwindcss";
 
 /* ======================= */
-/* 2️⃣ Tailwind v4 theme    */
-/* ======================= */
-@theme {
-  --color-brand: #d4af37;
-  --font-display: system-ui, Avenir, Helvetica, Arial, sans-serif;
-}
-
-/* ======================= */
-/* 3️⃣ Root / global styles */
+/* 2️⃣ Root / global styles */
 /* ======================= */
 :root {
-  font-family: var(--font-display);
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -30,7 +22,7 @@
 }
 
 /* ======================= */
-/* 4️⃣ Links                */
+/* 3️⃣ Links                */
 /* ======================= */
 a {
   font-weight: 500;
@@ -42,7 +34,7 @@ a:hover {
 }
 
 /* ======================= */
-/* 5️⃣ Body & layout        */
+/* 4️⃣ Body & layout        */
 /* ======================= */
 body {
   margin: 0;
@@ -53,7 +45,7 @@ body {
 }
 
 /* ======================= */
-/* 6️⃣ Headings             */
+/* 5️⃣ Headings             */
 /* ======================= */
 h1 {
   font-size: 3.2em;
@@ -61,7 +53,7 @@ h1 {
 }
 
 /* ======================= */
-/* 7️⃣ Buttons              */
+/* 6️⃣ Buttons              */
 /* ======================= */
 button {
   border-radius: 0.5rem; /* 8px */
@@ -83,7 +75,7 @@ button:focus-visible {
 }
 
 /* ======================= */
-/* 8️⃣ Light mode override  */
+/* 7️⃣ Light mode override  */
 /* ======================= */
 @media (prefers-color-scheme: light) {
   :root {
